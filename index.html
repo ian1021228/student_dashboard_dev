@@ -4401,5 +4401,22 @@
     // Run on start
     init();
   </script>
+
+  <!-- 測試環境全站常駐警示條 (DEV 置頂左下角橫幅) -->
+  <aside id="dev-persistent-alert-banner" class="fixed bottom-3 left-3 sm:bottom-4 sm:left-4 pointer-events-auto transition-all duration-300" style="z-index: 999999 !important;" aria-label="測試環境提示">
+    <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white rounded-2xl p-3 sm:py-2.5 sm:px-4 shadow-2xl border-2 border-white/40 backdrop-blur-md flex items-center gap-2.5 sm:gap-3 max-w-[calc(100vw-1.5rem)] sm:max-w-md">
+      <span class="w-8 h-8 rounded-xl bg-white/20 text-white flex items-center justify-center shrink-0 text-sm shadow-2xs">
+        <i class="fa-solid fa-flask-vial"></i>
+      </span>
+      <div class="text-xs sm:text-[13px] leading-snug font-bold">
+        您目前正在測試版體驗最新功能（v3.6），本區資料獨立隔離。若要進行日常使用，請隨時點此
+        <a href="https://ian1021228.github.io/homework_checker3.0/" class="inline-flex items-center gap-1 font-black text-amber-950 bg-white hover:bg-amber-50 px-2 py-0.5 rounded-lg shadow-xs text-xs transition-transform transform active:scale-95 ml-1">
+          <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          【返回正式版】
+        </a>
+      </div>
+    </div>
+  </aside>
+
 </body>
 </html>
