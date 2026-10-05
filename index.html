@@ -2283,9 +2283,10 @@
         return customAssignments[dateStr].map(seat => {
           const numSeat = Number(seat);
           const st = (data.students || []).find(s => Number(s.seat) === numSeat);
+          const customName = (st && st.name && st.name !== `${numSeat}號` && st.name !== `${String(numSeat).padStart(2, '0')}號`) ? st.name.trim() : '';
           return {
             seat: numSeat,
-            name: st ? (st.name || `${numSeat}號`) : `${numSeat}號`
+            name: customName
           };
         });
       }
@@ -2308,9 +2309,10 @@
       for (let i = 0; i < perDay; i++) {
         let seatNum = ((startIndex + i) % maxSeat) + 1;
         const st = (data.students || []).find(s => Number(s.seat) === seatNum);
+        const customName = (st && st.name && st.name !== `${seatNum}號` && st.name !== `${String(seatNum).padStart(2, '0')}號`) ? st.name.trim() : '';
         result.push({
           seat: seatNum,
-          name: st ? (st.name || `${seatNum}號`) : `${seatNum}號`
+          name: customName
         });
       }
       return result;
@@ -2324,7 +2326,7 @@
       const dutyStudents = calculateTodayDutyStudents(data, todayStr);
       if (elements.blackboardDutyDisplay) {
         if (dutyStudents.length > 0) {
-          elements.blackboardDutyDisplay.textContent = dutyStudents.map(d => `${d.seat} 號 ${d.name !== `${d.seat}號` ? d.name : ''}`.trim()).join('、');
+          elements.blackboardDutyDisplay.textContent = dutyStudents.map(d => `${d.seat}號${d.name ? ' ' + d.name : ''}`).join('、');
         } else {
           elements.blackboardDutyDisplay.textContent = '今日無排定值日生';
         }
