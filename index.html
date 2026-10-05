@@ -169,7 +169,7 @@
 
       <!-- Footer Info -->
       <div class="mt-8 text-center text-xs text-slate-400 space-y-1">
-        <p>班級經營系統 — 學生端 v2.1</p>
+        <p>班級經營系統 — 學生端 v3.6 (測試版 DEV)</p>
         <p>Created by 王禹硯（<a href="mailto:ianw.solar@gmail.com" class="text-emerald-600 hover:underline">ianw.solar@gmail.com</a>）</p>
       </div>
     </div>
@@ -279,6 +279,10 @@
               <p class="text-emerald-100 text-xs sm:text-sm mt-1">
                 自主管理今日作業與聯絡簿札記，邁向自律優秀的每一天！
               </p>
+              <div id="student-attendance-pill" class="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-white/20 backdrop-blur-md text-white border border-white/30">
+                <i class="fa-solid fa-user-check text-emerald-300"></i>
+                <span id="student-attendance-text">今日出勤：正常出席</span>
+              </div>
             </div>
 
             <!-- Fast Stat Badges -->
@@ -298,6 +302,98 @@
             </div>
           </div>
         </div>
+
+        <!-- 1.15 Blackboard Contact Book (今日電子黑板聯絡簿 - 讓學生不用抄聯絡簿) -->
+        <section id="blackboard-board-section" class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white rounded-3xl p-5 sm:p-7 shadow-xl border-4 border-amber-900/60 relative overflow-hidden space-y-4">
+          <!-- Blackboard Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-700/60">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-lg font-black shadow-inner">
+                <i class="fa-solid fa-chalkboard"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base sm:text-lg font-black tracking-wide text-amber-200">今日黑板聯絡簿</h3>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-500/30 text-emerald-300 border border-emerald-400/40">免抄直接看</span>
+                </div>
+                <p class="text-xs text-slate-300">即時連線導師電子黑板，課堂作業與叮嚀一覽無遺</p>
+              </div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div class="flex items-center gap-2">
+              <button type="button" id="copy-blackboard-btn" class="touch-target px-3.5 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 active:scale-95 text-xs font-black text-slate-100 flex items-center gap-1.5 border border-slate-600 transition-all cursor-pointer">
+                <i class="fa-solid fa-copy text-amber-400"></i>
+                <span>複製今日聯絡簿</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Duty Student & Bulletin Notice Row -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <!-- Duty Students Card -->
+            <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/70 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/30">
+                <i class="fa-solid fa-broom text-xs"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-black text-cyan-300">今日值日生</div>
+                <div id="blackboard-duty-display" class="text-sm font-black text-white mt-0.5">計算中...</div>
+                <div id="blackboard-duty-highlight" class="hidden mt-1.5 text-xs font-bold text-amber-300 flex items-center gap-1.5 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/30">
+                  <i class="fa-solid fa-star"></i> 今日輪到您擔任值日生，請協助擦黑板與維持班級整潔！
+                </div>
+              </div>
+            </div>
+
+            <!-- Bulletin Notice Card -->
+            <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/70 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/30">
+                <i class="fa-solid fa-bullhorn text-xs"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-black text-amber-300">班級即時公告</div>
+                <div id="blackboard-notice-display" class="text-xs text-slate-200 mt-0.5 leading-relaxed">今日無特殊公告事項</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Today Homework & Contact Notes Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <!-- Homework items -->
+            <div class="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/50 space-y-2">
+              <div class="flex items-center justify-between text-xs font-black text-emerald-300">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-list-check"></i> 今日作業項目</span>
+                <span id="blackboard-hw-count" class="text-[11px] text-slate-400">共 0 項</span>
+              </div>
+              <div id="blackboard-hw-items" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Contact Book Notes -->
+            <div class="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/50 space-y-2">
+              <div class="flex items-center justify-between text-xs font-black text-purple-300">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-pen-nib"></i> 今日聯絡簿交代事項</span>
+                <span id="blackboard-contact-date" class="text-[11px] text-slate-400">--</span>
+              </div>
+              <div id="blackboard-contact-items" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending Affairs Notice Banner inside Blackboard -->
+          <div id="blackboard-affairs-banner" class="hidden p-3 rounded-2xl bg-rose-950/80 border border-rose-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 text-xs text-rose-200">
+              <i class="fa-solid fa-envelope-open-text text-rose-400 text-sm"></i>
+              <span id="blackboard-affairs-text">導師已發布問卷回條，請提醒家長至家長端填寫簽署！</span>
+            </div>
+            <button type="button" id="copy-parent-link-from-student-btn" class="touch-target shrink-0 px-3 py-1.5 rounded-xl bg-rose-800 hover:bg-rose-700 active:scale-95 text-xs font-black text-rose-100 flex items-center justify-center gap-1.5 border border-rose-600 transition-all cursor-pointer">
+              <i class="fa-solid fa-share-nodes"></i>
+              <span>複製家長簽署專屬連結</span>
+            </button>
+          </div>
+        </section>
 
         <!-- 1.2 Module Navigation Tabs -->
         <div class="flex rounded-2xl bg-slate-200/80 p-1.5 gap-1.5 shadow-inner">
@@ -699,7 +795,7 @@
     <footer class="mt-auto bg-white border-t border-slate-200/80 py-4 px-4 text-center">
       <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
         <div class="flex flex-wrap items-center justify-center gap-y-1">
-          <span>班級經營系統 — 學生端 v2.1 (測試版 DEV)</span>
+          <span>班級經營系統 — 學生端 v3.6 (測試版 DEV)</span>
           <span class="mx-2 text-slate-300">|</span>
           <a href="https://docs.google.com/forms/d/19BPzX6vMrSnvW3j2s4OOvaiP3p1gS8auGbRt3f9aFkM/edit" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline font-bold">回報問題/提供建議</a>
           <span class="mx-2 text-slate-300">|</span>
@@ -1364,6 +1460,20 @@
       statHwProgress: document.getElementById("stat-hw-progress"),
       statTestCount: document.getElementById("stat-test-count"),
       statTestAvg: document.getElementById("stat-test-avg"),
+      studentAttendancePill: document.getElementById("student-attendance-pill"),
+      studentAttendanceText: document.getElementById("student-attendance-text"),
+      blackboardBoardSection: document.getElementById("blackboard-board-section"),
+      copyBlackboardBtn: document.getElementById("copy-blackboard-btn"),
+      blackboardDutyDisplay: document.getElementById("blackboard-duty-display"),
+      blackboardDutyHighlight: document.getElementById("blackboard-duty-highlight"),
+      blackboardNoticeDisplay: document.getElementById("blackboard-notice-display"),
+      blackboardHwCount: document.getElementById("blackboard-hw-count"),
+      blackboardHwItems: document.getElementById("blackboard-hw-items"),
+      blackboardContactDate: document.getElementById("blackboard-contact-date"),
+      blackboardContactItems: document.getElementById("blackboard-contact-items"),
+      blackboardAffairsBanner: document.getElementById("blackboard-affairs-banner"),
+      blackboardAffairsText: document.getElementById("blackboard-affairs-text"),
+      copyParentLinkFromStudentBtn: document.getElementById("copy-parent-link-from-student-btn"),
 
       // Tabs
       tabHwBtn: document.getElementById("tab-hw-btn"),
@@ -2123,6 +2233,12 @@
       // Ensure Student Parent PIN is active & displayed
       ensureStudentPin();
 
+      // 1.5 Render Attendance Status
+      renderStudentAttendance(data);
+
+      // 1.8 Render Blackboard Contact Book
+      renderBlackboardContactSection(data);
+
       // 2. Render Homework Section
       renderHomeworkSection(data);
 
@@ -2134,6 +2250,159 @@
 
       // 5. Render Mood Journal
       renderMoodJournalSection();
+    }
+
+    function renderStudentAttendance(data) {
+      if (!elements.studentAttendancePill) return;
+      const todayStr = getTodayDateString();
+      const attRecord = data?.attendance?.[todayStr] || {};
+      const mySeat = state.studentSeat;
+      const myStatus = mySeat ? (attRecord[mySeat] || 'present') : 'present';
+
+      const statusMap = {
+        'present': { text: '今日出勤：正常出席', icon: 'fa-circle-check', textClass: 'text-emerald-300' },
+        'tardy': { text: '今日出勤：遲到登記', icon: 'fa-clock', textClass: 'text-amber-300' },
+        'sick': { text: '今日出勤：病假登記', icon: 'fa-head-side-cough', textClass: 'text-rose-300' },
+        'personal': { text: '今日出勤：事假登記', icon: 'fa-user-clock', textClass: 'text-blue-300' },
+        'official': { text: '今日出勤：公假登記', icon: 'fa-award', textClass: 'text-purple-300' }
+      };
+
+      const info = statusMap[myStatus] || statusMap['present'];
+      elements.studentAttendancePill.innerHTML = `
+        <i class="fa-solid ${info.icon} ${info.textClass}"></i>
+        <span id="student-attendance-text">${info.text}</span>
+      `;
+    }
+
+    function calculateTodayDutyStudents(data, dateStr) {
+      if (!data) return [];
+      const settings = data.dutySettings || {};
+      const customAssignments = settings.customAssignments || {};
+
+      if (customAssignments[dateStr] && Array.isArray(customAssignments[dateStr]) && customAssignments[dateStr].length > 0) {
+        return customAssignments[dateStr].map(seat => {
+          const numSeat = Number(seat);
+          const st = (data.students || []).find(s => Number(s.seat) === numSeat);
+          return {
+            seat: numSeat,
+            name: st ? (st.name || `${numSeat}號`) : `${numSeat}號`
+          };
+        });
+      }
+
+      const maxSeat = typeof data.lastMaxSeat === 'number' && data.lastMaxSeat > 0 ? data.lastMaxSeat : 30;
+      const perDay = Number(settings.studentsPerDay) || 2;
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const targetDate = new Date(y, m - 1, d);
+      const startOfYear = new Date(y, 0, 1);
+      let schoolDayCount = 0;
+      for (let cur = new Date(startOfYear); cur <= targetDate; cur.setDate(cur.getDate() + 1)) {
+        const dayOfWeek = cur.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          schoolDayCount++;
+        }
+      }
+
+      const startIndex = (schoolDayCount * perDay) % maxSeat;
+      const result = [];
+      for (let i = 0; i < perDay; i++) {
+        let seatNum = ((startIndex + i) % maxSeat) + 1;
+        const st = (data.students || []).find(s => Number(s.seat) === seatNum);
+        result.push({
+          seat: seatNum,
+          name: st ? (st.name || `${seatNum}號`) : `${seatNum}號`
+        });
+      }
+      return result;
+    }
+
+    function renderBlackboardContactSection(data) {
+      if (!data) return;
+      const todayStr = getTodayDateString();
+
+      // 1. 值日生計算與展示
+      const dutyStudents = calculateTodayDutyStudents(data, todayStr);
+      if (elements.blackboardDutyDisplay) {
+        if (dutyStudents.length > 0) {
+          elements.blackboardDutyDisplay.textContent = dutyStudents.map(d => `${d.seat} 號 ${d.name !== `${d.seat}號` ? d.name : ''}`.trim()).join('、');
+        } else {
+          elements.blackboardDutyDisplay.textContent = '今日無排定值日生';
+        }
+      }
+
+      // 檢查目前座號是否為今日值日生
+      if (elements.blackboardDutyHighlight) {
+        const isMyDuty = state.studentSeat && dutyStudents.some(d => Number(d.seat) === Number(state.studentSeat));
+        if (isMyDuty) {
+          elements.blackboardDutyHighlight.classList.remove('hidden');
+        } else {
+          elements.blackboardDutyHighlight.classList.add('hidden');
+        }
+      }
+
+      // 2. 班級即時公告
+      if (elements.blackboardNoticeDisplay) {
+        if (data.bulletinNotice && data.bulletinNotice.trim()) {
+          elements.blackboardNoticeDisplay.textContent = data.bulletinNotice.trim();
+        } else {
+          elements.blackboardNoticeDisplay.textContent = '今日無特別公告事項，請專心學習、按時完成各項作業！';
+        }
+      }
+
+      // 3. 今日作業項目
+      const homeworks = data.homeworks || [];
+      if (elements.blackboardHwCount) {
+        elements.blackboardHwCount.textContent = `共 ${homeworks.length} 項`;
+      }
+      if (elements.blackboardHwItems) {
+        if (homeworks.length === 0) {
+          elements.blackboardHwItems.innerHTML = '<div class="text-xs text-slate-400 py-2">今日尚無已派發作業</div>';
+        } else {
+          elements.blackboardHwItems.innerHTML = homeworks.map((hw, idx) => `
+            <div class="flex items-center gap-2 p-1.5 rounded-lg bg-slate-900/60 border border-slate-700/60 text-xs">
+              <span class="w-5 h-5 rounded-md bg-emerald-500/20 text-emerald-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">${idx + 1}</span>
+              <span class="font-bold text-slate-200 truncate flex-1">${escapeHtml(hw.name)}</span>
+            </div>
+          `).join('');
+        }
+      }
+
+      // 4. 今日聯絡簿交代事項
+      const contactBook = data.contactBook || {};
+      const todayContact = contactBook[todayStr] || contactBook[Object.keys(contactBook).sort().reverse()[0]] || [];
+      const contactEntries = Array.isArray(todayContact) ? todayContact : (todayContact.items || []);
+      
+      if (elements.blackboardContactDate) {
+        elements.blackboardContactDate.textContent = todayStr;
+      }
+      if (elements.blackboardContactItems) {
+        if (contactEntries.length === 0) {
+          elements.blackboardContactItems.innerHTML = '<div class="text-xs text-slate-400 py-2">今日尚無特殊聯絡簿叮嚀</div>';
+        } else {
+          elements.blackboardContactItems.innerHTML = contactEntries.map((item, idx) => {
+            const text = typeof item === 'string' ? item : (item.text || item.title || '');
+            return `
+              <div class="flex items-start gap-2 p-1.5 rounded-lg bg-slate-900/60 border border-slate-700/60 text-xs">
+                <span class="w-5 h-5 rounded-md bg-purple-500/20 text-purple-300 font-mono font-bold flex items-center justify-center shrink-0 text-[10px] mt-0.5">${idx + 1}</span>
+                <span class="font-medium text-slate-200 leading-snug flex-1">${escapeHtml(text)}</span>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // 5. 班級問卷回條提醒
+      const affairs = data.affairs || [];
+      if (elements.blackboardAffairsBanner && elements.blackboardAffairsText) {
+        const activeAffairs = affairs.filter(a => a.status === 'open' || !a.status);
+        if (activeAffairs.length > 0) {
+          const latestAffair = activeAffairs[0];
+          elements.blackboardAffairsText.textContent = `導師已發布【${latestAffair.title}】等 ${activeAffairs.length} 份問卷回條，請提醒家長至家長端填寫簽署！`;
+          elements.blackboardAffairsBanner.classList.remove('hidden');
+        } else {
+          elements.blackboardAffairsBanner.classList.add('hidden');
+        }
+      }
     }
 
     function populateSeatSelectors(data) {
@@ -3726,6 +3995,63 @@
       elements.tabHwBtn.addEventListener("click", () => switchTab("hw"));
       elements.tabScoresBtn.addEventListener("click", () => switchTab("scores"));
       elements.tabContactBtn.addEventListener("click", () => switchTab("contact"));
+
+      // Copy Blackboard Contact Book
+      if (elements.copyBlackboardBtn) {
+        elements.copyBlackboardBtn.addEventListener("click", () => {
+          if (!state.classData) return;
+          const data = state.classData;
+          const todayStr = getTodayDateString();
+          const duty = calculateTodayDutyStudents(data, todayStr);
+          const homeworks = data.homeworks || [];
+          const contactBook = data.contactBook || {};
+          const todayContact = contactBook[todayStr] || contactBook[Object.keys(contactBook).sort().reverse()[0]] || [];
+          const contactEntries = Array.isArray(todayContact) ? todayContact : (todayContact.items || []);
+
+          let text = `【${data.className || '班級'}】今日黑板聯絡簿 (${todayStr})\n`;
+          text += `值日生：${duty.length > 0 ? duty.map(d => `${d.seat}號`).join('、') : '無'}\n`;
+          if (data.bulletinNotice && data.bulletinNotice.trim()) {
+            text += `重要提醒：${data.bulletinNotice.trim()}\n`;
+          }
+          text += `\n【今日作業】\n`;
+          if (homeworks.length === 0) {
+            text += `（無）\n`;
+          } else {
+            homeworks.forEach((h, i) => {
+              text += `${i + 1}. ${h.name}\n`;
+            });
+          }
+          text += `\n【聯絡事項】\n`;
+          if (contactEntries.length === 0) {
+            text += `（無）\n`;
+          } else {
+            contactEntries.forEach((c, i) => {
+              const cText = typeof c === 'string' ? c : (c.text || c.title || '');
+              text += `${i + 1}. ${cText}\n`;
+            });
+          }
+
+          navigator.clipboard.writeText(text).then(() => {
+            showToast("已成功複製今日黑板聯絡簿！", "success");
+          }).catch(() => {
+            showToast("複製失敗，請手動複製", "error");
+          });
+        });
+      }
+
+      // Copy Parent Direct Link
+      if (elements.copyParentLinkFromStudentBtn) {
+        elements.copyParentLinkFromStudentBtn.addEventListener("click", () => {
+          if (!state.accessCode) return;
+          const seatParam = state.studentSeat ? `&seat=${state.studentSeat}` : '';
+          const url = `https://ian1021228.github.io/parent_dashboard_dev/?code=${state.accessCode}${seatParam}`;
+          navigator.clipboard.writeText(url).then(() => {
+            showToast("已複製家長端直達專屬連結！可直接傳送給家長", "success");
+          }).catch(() => {
+            showToast("複製失敗", "error");
+          });
+        });
+      }
 
       // Settings Modal
       elements.openSettingsBtn.addEventListener("click", () => elements.settingsModal.classList.remove("hidden"));
