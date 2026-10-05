@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>班級經營系統 — 學生端</title>
-  <meta name="description" content="班級經營系統學生端數位聯絡簿與成績登記，讓學生自主填寫成績、檢核作業、記錄心情日記，全面取代實體聯絡簿">
-  <meta property="og:title" content="班級經營系統 — 學生端">
+  <title>班級經營系統 — 學生端 (測試版 DEV)</title>
+  <meta name="description" content="班級經營系統學生端 (測試版 DEV) - 數位聯絡簿與自主成績登記，獨立測試資料庫">
+  <meta property="og:title" content="班級經營系統 — 學生端 (測試版 DEV)">
   <meta property="og:description" content="班級經營系統學生端數位聯絡簿與成績登記，讓學生自主填寫成績、檢核作業、記錄心情日記，全面取代實體聯絡簿">
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/png" href="homework-checker-icon.png">
@@ -153,15 +153,15 @@
         </form>
 
         <div class="mt-6 pt-5 border-t border-slate-100 text-center space-y-2">
-          <a href="https://ian1021228.github.io/ian_homework_checker2.0_online_parent_dashboard/" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-emerald-600 transition-colors">
+          <a href="https://ian1021228.github.io/parent_dashboard_dev/" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-emerald-600 transition-colors">
             <i class="fa-solid fa-user-group text-slate-400"></i>
-            <span>切換至家長即時查核看板</span>
+            <span>切換至家長即時查核看板 (DEV)</span>
             <i class="fa-solid fa-chevron-right text-[10px]"></i>
           </a>
           <div>
-            <a href="https://ian1021228.github.io/homework_checker3.0/" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-600 transition-colors">
+            <a href="https://ian1021228.github.io/homework_checker3.0_dev/" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-600 transition-colors">
               <i class="fa-solid fa-chalkboard-user text-slate-400"></i>
-              <span>班級經營系統首頁（教師端）</span>
+              <span>班級經營系統首頁（教師端 DEV）</span>
             </a>
           </div>
         </div>
@@ -699,13 +699,13 @@
     <footer class="mt-auto bg-white border-t border-slate-200/80 py-4 px-4 text-center">
       <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
         <div class="flex flex-wrap items-center justify-center gap-y-1">
-          <span>班級經營系統 — 學生端 v2.1</span>
+          <span>班級經營系統 — 學生端 v2.1 (測試版 DEV)</span>
           <span class="mx-2 text-slate-300">|</span>
           <a href="https://docs.google.com/forms/d/19BPzX6vMrSnvW3j2s4OOvaiP3p1gS8auGbRt3f9aFkM/edit" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline font-bold">回報問題/提供建議</a>
           <span class="mx-2 text-slate-300">|</span>
-          <a href="https://ian1021228.github.io/ian_homework_checker2.0_online_parent_dashboard/" class="text-emerald-600 hover:underline font-bold">家長端</a>
+          <a href="https://ian1021228.github.io/parent_dashboard_dev/" class="text-emerald-600 hover:underline font-bold">家長端(DEV)</a>
           <span class="mx-2 text-slate-300">|</span>
-          <a href="https://ian1021228.github.io/homework_checker3.0/" class="text-slate-600 hover:underline font-semibold">首頁</a>
+          <a href="https://ian1021228.github.io/homework_checker3.0_dev/" class="text-slate-600 hover:underline font-semibold">首頁(DEV)</a>
         </div>
         <div class="font-medium text-slate-400">
           <span class="hidden sm:inline-block mr-2 text-slate-300">｜</span>Created by 王禹硯（<a href="mailto:ianw.solar@gmail.com" class="text-emerald-600 hover:underline">ianw.solar@gmail.com</a>）
@@ -1034,10 +1034,10 @@
 
         <!-- 5. Class Navigation & Switch -->
         <div class="pt-3 border-t border-slate-100 space-y-2">
-          <a href="https://ian1021228.github.io/ian_homework_checker2.0_online_parent_dashboard/" class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold text-xs transition-colors">
+          <a href="https://ian1021228.github.io/parent_dashboard_dev/" class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold text-xs transition-colors">
             <span class="flex items-center gap-2">
               <i class="fa-solid fa-users text-emerald-600"></i>
-              <span>前往家長端即時查核看板</span>
+              <span>前往家長端即時查核看板 (DEV)</span>
             </span>
             <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
           </a>
@@ -1297,14 +1297,13 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const APP_COLLECTION_ID = "homework-checker-pro";
+    // 測試版獨立 Firebase Firestore 命名空間（與正式版 100% 實體隔離）
+    const APP_COLLECTION_ID = "homework-checker-dev";
 
     // ==========================================
-    // 【模組功能開關】小考成績系統開關
-    // 隱藏任何關於成績系統的功能，確保日後能復原。
-    // 若日後需復原，將此開關改為 true，並移除相應 hidden class 即可 100% 完整復原！
+    // 【模組功能開關】小考成績系統開關 (測試版全面啟用)
     // ==========================================
-    const ENABLE_SCORES_FEATURE = false;
+    const ENABLE_SCORES_FEATURE = true;
 
     // Local Storage Keys
     const LS_ACCESS_CODE_KEY = "student_access_code";
