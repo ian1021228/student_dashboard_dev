@@ -281,7 +281,7 @@
               </p>
               <div id="student-attendance-pill" class="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-white/20 backdrop-blur-md text-white border border-white/30">
                 <i class="fa-solid fa-user-check text-emerald-300"></i>
-                <span id="student-attendance-text">今日出勤：正常出席</span>
+                <span id="student-attendance-text">今日出席：正常出席</span>
               </div>
             </div>
 
@@ -2260,11 +2260,11 @@
       const myStatus = mySeat ? (attRecord[mySeat] || 'present') : 'present';
 
       const statusMap = {
-        'present': { text: '今日出勤：正常出席', icon: 'fa-circle-check', textClass: 'text-emerald-300' },
-        'tardy': { text: '今日出勤：遲到登記', icon: 'fa-clock', textClass: 'text-amber-300' },
-        'sick': { text: '今日出勤：病假登記', icon: 'fa-head-side-cough', textClass: 'text-rose-300' },
-        'personal': { text: '今日出勤：事假登記', icon: 'fa-user-clock', textClass: 'text-blue-300' },
-        'official': { text: '今日出勤：公假登記', icon: 'fa-award', textClass: 'text-purple-300' }
+        'present': { text: '今日出席：正常出席', icon: 'fa-circle-check', textClass: 'text-emerald-300' },
+        'tardy': { text: '今日出席：遲到登記', icon: 'fa-clock', textClass: 'text-amber-300' },
+        'sick': { text: '今日出席：病假登記', icon: 'fa-head-side-cough', textClass: 'text-rose-300' },
+        'personal': { text: '今日出席：事假登記', icon: 'fa-user-clock', textClass: 'text-blue-300' },
+        'official': { text: '今日出席：公假登記', icon: 'fa-award', textClass: 'text-purple-300' }
       };
 
       const info = statusMap[myStatus] || statusMap['present'];
