@@ -2,7 +2,7 @@
 <html lang="zh-TW" class="h-full bg-slate-50">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>班級經營系統 — 學生端 (測試版 DEV)</title>
   <meta name="description" content="班級經營系統學生端 (測試版 DEV) - 數位聯絡簿與自主成績登記，獨立測試資料庫">
   <meta property="og:title" content="班級經營系統 — 學生端 (測試版 DEV)">
@@ -57,11 +57,26 @@
   </script>
 
   <style>
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+    }
     html {
       -webkit-tap-highlight-color: transparent;
+      padding-top: var(--sat);
+      padding-left: var(--sal);
+      padding-right: var(--sar);
     }
     body {
       font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+      padding-bottom: calc(4.75rem + var(--sab));
+    }
+    input, textarea, select {
+      user-select: text;
     }
     .custom-scrollbar::-webkit-scrollbar {
       height: 6px;
@@ -91,6 +106,40 @@
     }
     .checkbox-bounce:active {
       transform: scale(0.9);
+    }
+
+    /* 原生底抽屜 (Bottom Sheet Modal) 行動端樣式 */
+    @media (max-width: 640px) {
+      #score-modal, #settings-modal, #modal-score-bracket-analysis, #modal-edit-my-score, #modal-multi-subject-filter, #inapp-confirm-modal, #modal-ios-pwa-guide, .modal {
+        align-items: flex-end !important;
+        padding: 0 !important;
+      }
+      #score-modal > div, #settings-modal > div, #modal-score-bracket-analysis > div, #modal-edit-my-score > div, #modal-multi-subject-filter > div, #inapp-confirm-modal > div, #modal-ios-pwa-guide > div, .modal-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        border-top-left-radius: 2rem !important;
+        border-top-right-radius: 2rem !important;
+        padding-bottom: calc(1.75rem + var(--sab)) !important;
+        max-height: 88vh !important;
+        overflow-y: auto !important;
+        animation: studentSheetSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        position: relative;
+      }
+      #score-modal > div::before, #settings-modal > div::before, #modal-score-bracket-analysis > div::before, #modal-edit-my-score > div::before, #modal-multi-subject-filter > div::before, #inapp-confirm-modal > div::before, #modal-ios-pwa-guide > div::before {
+        content: '';
+        display: block;
+        width: 44px;
+        height: 5px;
+        background: #cbd5e1;
+        border-radius: 999px;
+        margin: 8px auto 14px auto;
+      }
+    }
+    @keyframes studentSheetSlideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
     }
   </style>
 </head>
@@ -396,7 +445,7 @@
         </section>
 
         <!-- 1.2 Module Navigation Tabs -->
-        <div class="flex rounded-2xl bg-slate-200/80 p-1.5 gap-1.5 shadow-inner">
+        <div id="student-main-tabs" class="hidden sm:flex rounded-2xl bg-slate-200/80 p-1.5 gap-1.5 shadow-inner">
           <button id="tab-hw-btn" class="flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition-all bg-white text-emerald-700 shadow-sm flex items-center justify-center gap-2 cursor-pointer">
             <i class="fa-solid fa-list-check"></i>
             <span>今日作業檢核</span>
@@ -808,6 +857,26 @@
         </div>
       </div>
     </footer>
+
+    <!-- 學生端手機原生 App 底部導航欄 (Mobile Bottom Tab Bar) -->
+    <nav id="student-mobile-bottom-nav" class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-2xl sm:hidden flex pb-[env(safe-area-inset-bottom,0px)] select-none">
+      <div class="grid grid-cols-3 w-full h-16 items-center px-1">
+        <button id="student-mobile-nav-hw" data-tab="hw" class="student-mobile-tab-btn flex flex-col items-center justify-center gap-1 text-emerald-600 font-extrabold text-[11px] py-1 cursor-pointer transition-all active:scale-95 relative" title="作業檢核">
+          <i class="fa-solid fa-list-check text-lg"></i>
+          <span>作業檢核</span>
+          <span id="student-mobile-hw-badge" class="hidden absolute top-1 right-[22%] px-1.5 py-0.2 text-[9px] font-black rounded-full bg-rose-500 text-white">0</span>
+        </button>
+        <button id="student-mobile-nav-contact" data-tab="contact" class="student-mobile-tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-indigo-600 font-extrabold text-[11px] py-1 cursor-pointer transition-all active:scale-95 relative" title="聯絡簿札記">
+          <i class="fa-solid fa-book text-lg"></i>
+          <span>聯絡簿札記</span>
+          <span id="student-mobile-contact-badge" class="hidden absolute top-1 right-[22%] px-1.5 py-0.2 text-[9px] font-black rounded-full bg-rose-500 text-white">0</span>
+        </button>
+        <button id="student-mobile-nav-scores" data-tab="scores" class="student-mobile-tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-amber-600 font-extrabold text-[11px] py-1 cursor-pointer transition-all active:scale-95" title="今日成績">
+          <i class="fa-solid fa-award text-lg"></i>
+          <span>今日成績</span>
+        </button>
+      </div>
+    </nav>
   </div>
 
   <!-- ============================================================== -->
@@ -2593,10 +2662,25 @@
           saveLocalState();
           renderHomeworkSection(data);
           if (state.selfChecks[hwId]) {
+            triggerHaptic('success');
             showToast("太棒了！已標記自主完成！", "success");
+          } else {
+            triggerHaptic('light');
           }
         });
       });
+
+      // 更新手機端底部導航欄未完成作業徽章
+      const unfinishedHwCount = homeworks.filter(h => !state.selfChecks[h.id]).length;
+      const mobileHwBadge = document.getElementById('student-mobile-hw-badge');
+      if (mobileHwBadge) {
+        if (unfinishedHwCount > 0) {
+          mobileHwBadge.textContent = String(unfinishedHwCount);
+          mobileHwBadge.classList.remove('hidden');
+        } else {
+          mobileHwBadge.classList.add('hidden');
+        }
+      }
     }
 
     // ==========================================
@@ -3797,6 +3881,17 @@
         elements.contactUnfinishedBadge.textContent = "";
         elements.contactUnfinishedBadge.classList.add('hidden');
       }
+
+      // 更新手機端底部導航欄聯絡簿未完成徽章
+      const mobileContactBadge = document.getElementById('student-mobile-contact-badge');
+      if (mobileContactBadge) {
+        if (totalUnfinished > 0) {
+          mobileContactBadge.textContent = String(totalUnfinished);
+          mobileContactBadge.classList.remove('hidden');
+        } else {
+          mobileContactBadge.classList.add('hidden');
+        }
+      }
     }
 
     function renderContactBookSection(data) {
@@ -3925,7 +4020,10 @@
             renderContactBookSection(data);
             updateContactUnfinishedBadge();
             if (state.contactChecks[key]) {
+              triggerHaptic('success');
               showToast("已標記此聯絡事項完成！", "success");
+            } else {
+              triggerHaptic('light');
             }
           });
         });
@@ -3994,9 +4092,23 @@
       });
 
       // Tab Switching
-      elements.tabHwBtn.addEventListener("click", () => switchTab("hw"));
-      elements.tabScoresBtn.addEventListener("click", () => switchTab("scores"));
-      elements.tabContactBtn.addEventListener("click", () => switchTab("contact"));
+      elements.tabHwBtn.addEventListener("click", () => { triggerHaptic('light'); switchTab("hw"); });
+      elements.tabScoresBtn.addEventListener("click", () => { triggerHaptic('light'); switchTab("scores"); });
+      elements.tabContactBtn.addEventListener("click", () => { triggerHaptic('light'); switchTab("contact"); });
+
+      // Mobile Bottom Nav Tabs
+      document.getElementById('student-mobile-nav-hw')?.addEventListener('click', () => {
+        triggerHaptic('light');
+        switchTab('hw');
+      });
+      document.getElementById('student-mobile-nav-contact')?.addEventListener('click', () => {
+        triggerHaptic('light');
+        switchTab('contact');
+      });
+      document.getElementById('student-mobile-nav-scores')?.addEventListener('click', () => {
+        triggerHaptic('light');
+        switchTab('scores');
+      });
 
       // Copy Blackboard Contact Book
       if (elements.copyBlackboardBtn) {
@@ -4367,6 +4479,18 @@
       });
     }
 
+    function triggerHaptic(type = 'light') {
+      if (typeof window !== 'undefined' && 'navigator' in window && typeof navigator.vibrate === 'function') {
+        try {
+          if (type === 'light') navigator.vibrate(12);
+          else if (type === 'medium') navigator.vibrate(25);
+          else if (type === 'success') navigator.vibrate([15, 40, 20]);
+          else if (type === 'warning' || type === 'error') navigator.vibrate([30, 50, 30]);
+        } catch (e) {}
+      }
+    }
+    window.triggerHaptic = triggerHaptic;
+
     function switchTab(tabName) {
       if (tabName === "scores" && !ENABLE_SCORES_FEATURE) {
         tabName = "hw";
@@ -4393,6 +4517,24 @@
         }
       });
 
+      // 更新手機端底部導航欄高亮
+      const mobileNavMap = {
+        'hw': 'student-mobile-nav-hw',
+        'contact': 'student-mobile-nav-contact',
+        'scores': 'student-mobile-nav-scores'
+      };
+      document.querySelectorAll('.student-mobile-tab-btn').forEach(btn => {
+        btn.classList.remove('text-emerald-600', 'text-indigo-600', 'text-amber-600');
+        btn.classList.add('text-slate-400');
+      });
+      const activeMobileBtn = document.getElementById(mobileNavMap[tabName]);
+      if (activeMobileBtn) {
+        activeMobileBtn.classList.remove('text-slate-400');
+        if (tabName === 'contact') activeMobileBtn.classList.add('text-indigo-600');
+        else if (tabName === 'scores') activeMobileBtn.classList.add('text-amber-600');
+        else activeMobileBtn.classList.add('text-emerald-600');
+      }
+
       if (tabName === "scores") {
         checkStudentScoresAuth();
       }
@@ -4401,22 +4543,6 @@
     // Run on start
     init();
   </script>
-
-  <!-- 測試環境全站常駐警示條 (DEV 置頂左下角橫幅) -->
-  <aside id="dev-persistent-alert-banner" class="fixed bottom-3 left-3 sm:bottom-4 sm:left-4 pointer-events-auto transition-all duration-300" style="z-index: 999999 !important;" aria-label="測試環境提示">
-    <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white rounded-2xl p-3 sm:py-2.5 sm:px-4 shadow-2xl border-2 border-white/40 backdrop-blur-md flex items-center gap-2.5 sm:gap-3 max-w-[calc(100vw-1.5rem)] sm:max-w-md">
-      <span class="w-8 h-8 rounded-xl bg-white/20 text-white flex items-center justify-center shrink-0 text-sm shadow-2xs">
-        <i class="fa-solid fa-flask-vial"></i>
-      </span>
-      <div class="text-xs sm:text-[13px] leading-snug font-bold">
-        您目前正在測試版體驗最新功能（v3.6），本區資料獨立隔離。若要進行日常使用，請隨時點此
-        <a href="https://ian1021228.github.io/homework_checker3.0/" class="inline-flex items-center gap-1 font-black text-amber-950 bg-white hover:bg-amber-50 px-2 py-0.5 rounded-lg shadow-xs text-xs transition-transform transform active:scale-95 ml-1">
-          <i class="fa-solid fa-arrow-left text-[10px]"></i>
-          【返回正式版】
-        </a>
-      </div>
-    </div>
-  </aside>
 
 </body>
 </html>
